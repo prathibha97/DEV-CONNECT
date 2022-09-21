@@ -1,14 +1,21 @@
-import { Fragment } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/layouts/Navbar";
 import Landing from "./components/layouts/Landing";
-import './App.css';
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import "./App.css";
 
 function App() {
   return (
-    <Fragment >
+    <Router>
       <Navbar />
-      <Landing />
-    </Fragment>
+
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
