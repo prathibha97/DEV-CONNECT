@@ -11,17 +11,17 @@ function Register() {
 
   const { name, email, password, password2 } = formData;
 
-  const onChange = (e) =>{
-    const {name, value} = e.target;
+  const onChange = (e) => {
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  }
+  };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       console.log("passwords do not match");
     } else {
-      console.log(formData);
+      console.log("Success");
     }
   };
 
