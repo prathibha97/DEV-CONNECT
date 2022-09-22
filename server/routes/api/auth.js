@@ -1,25 +1,34 @@
-const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-const gravatar = require("gravatar");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
-const User = require("../../models/user");
+const auth = require("../../services/middleware/auth");
+const User = require("../../server/models/user");
 
-// @route   POST api/users
-// @desc    Register a user
+// @route   GET api/auth
+// @desc    Test route
+// @access  public
+
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// @route   POST api/auth
+// @desc    Authenticate user & get the token
 // @access  public
 
 router.post(
   "/",
   [
-    check("name", "Name is required").not().isEmpty(),
     check("email", "Please include a valid email").isEmail(),
-    check(
-      "password",
-      "Please enter a password with 6 or more charactors"
-    ).isLength({ min: 6 }),
+    check("password", "Password is required").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -27,38 +36,26 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
     try {
       // See is user exists
       let user = await User.findOne({ email });
 
-      if (user) {
+      if (!user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists" }] });
+          .json({ errors: [{ msg: "Invalid credentials" }] });
       }
 
-      // Get user's Gravatar
-      const avatar = gravatar.url(email, {
-        s: "200",
-        r: "pg",
-        d: "mm",
-      });
+      // compare password
+      const isMatch = await bcrypt.compare(password, user.password);
 
-      user = new User({
-        name,
-        email,
-        password,
-        avatar,
-      });
-      // Encrypt password with bcrypt
-
-      const salt = await bcrypt.genSalt(10);
-
-      user.password = await bcrypt.hash(password, salt);
-
-      await user.save();
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Invalid credentials" }] });
+      }
 
       // Return jsonwebtoken
       const payload = {
@@ -68,17 +65,18 @@ router.post(
       };
 
       const jwtSecret = process.env.JWTSECRET;
+      
       jwt.sign(
         payload,
         jwtSecret,
         {
-          expiresIn: 360000,
+          expiresIn: 3600,
         },
         (err, token) => {
           if (err) {
             throw err;
           } else {
-            res.json({token});
+            res.json({ token });
           }
         }
       );

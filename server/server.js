@@ -12,9 +12,10 @@ connectDB();
 
 // Init Middleware
 app.use(express.json({extended: true}));
+app.use(express.static(path.join(__dirname, "..", "..", "client", "build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "..", "client", "build", "index.html"));
 });
 
 // Define routes
