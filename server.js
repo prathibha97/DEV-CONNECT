@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path= require("path");
 const express = require("express");
 const connectDB = require("./services/mongo");
 
@@ -12,8 +13,8 @@ connectDB();
 // Init Middleware
 app.use(express.json({extended: true}));
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 // Define routes
