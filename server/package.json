@@ -4,8 +4,8 @@
   "description": "Social network for developers",
   "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "watch": "nodemon src/server.js",
+    "start": "node server.js",
+    "watch": "nodemon server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
 
   },
