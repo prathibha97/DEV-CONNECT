@@ -13,12 +13,14 @@ import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import { useEffect } from "react";
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
-
 function App() {
   useEffect(() => {
+    // check for token in localStorage when app first runs
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    // try to fetch a user, if no token or invalid token we
+    // will get a 401 response from our API
     store.dispatch(loadUser());
   }, []);
   return (
