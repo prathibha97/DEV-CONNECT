@@ -4,6 +4,8 @@ import Landing from "./components/layouts/Landing";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Alert from "./components/layouts/Alert";
+import Dashboard from "./components/dashboard/Dashboard";
+import PrivateRoute from "./components/Routing/PrivateRoute";
 import "./App.css";
 
 // rudux
@@ -32,6 +34,10 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route
+            path="dashboard"
+            element={<PrivateRoute component={Dashboard} />}
+          />
         </Routes>
       </Router>
     </Provider>
