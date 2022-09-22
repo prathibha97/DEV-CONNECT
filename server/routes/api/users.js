@@ -5,7 +5,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
-const User = require("../../server/models/user");
+const User = require("../../models/User");
 
 // @route   POST api/users
 // @desc    Register a user
