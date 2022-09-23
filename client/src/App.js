@@ -14,6 +14,7 @@ import store from "./store";
 import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import { useEffect } from "react";
+import CreateProfile from "./components/profile-form/CreateProfile";
 
 function App() {
   useEffect(() => {
@@ -37,6 +38,10 @@ function App() {
           <Route
             path="dashboard"
             element={<PrivateRoute component={Dashboard} />}
+          />
+           <Route
+            path="create-profile"
+            element={<PrivateRoute component={CreateProfile} />}
           />
         </Routes>
       </Router>
