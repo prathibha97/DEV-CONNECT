@@ -1,26 +1,61 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { createProfile } from "../../actions/profile";
-import { Link, useNavigate } from "react-router-dom";
+import { createProfile, getCurrentProfile } from "../../actions/profile";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 
-const CreateProfile = ({ createProfile, profile }) => {
-  const [formData, setFormData] = useState({
-    company: "",
-    website: "",
-    location: "",
-    status: "",
-    skills: "",
-    githubusername: "",
-    bio: "",
-    twitter: "",
-    facebook: "",
-    linkedin: "",
-    youtube: "",
-    instagram: "",
-  });
+const initialState = {
+  company: "",
+  website: "",
+  location: "",
+  status: "",
+  skills: "",
+  githubusername: "",
+  bio: "",
+  twitter: "",
+  facebook: "",
+  linkedin: "",
+  youtube: "",
+  instagram: "",
+};
+
+const ProfileForm = ({
+  profile: { profile, loading },
+  createProfile,
+  getCurrentProfile,
+}) => {
+  const [formData, setFormData] = useState(initialState);
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+  const navigate = useNavigate();
+
+  const creatingProfile = useMatch("/create-profile");
+
+  useEffect(() => {
+    // if there is no profile, try to fetch one
+    if (!profile) getCurrentProfile();
+
+    // if finished loading and got a profile, then build profile data
+    if (!loading && profile) {
+      const profileData = { ...initialState };
+
+      for (const key in profile) {
+        if (key in profileData) profileData[key] = profile[key];
+      }
+
+      for (const key in profile.social) {
+        if (key in profileData) profileData[key] = profile.social[key];
+      }
+
+      // the skills may be an array from our API response
+      if (Array.isArray(profileData.skills)) {
+        profileData.skills = profileData.skills.join(", ");
+      }
+      // set local state with the profile data
+      setFormData(profileData);
+    }
+  }, [loading, getCurrentProfile, profile]);
 
   const {
     company,
@@ -45,8 +80,6 @@ const CreateProfile = ({ createProfile, profile }) => {
     });
   };
 
-  const navigate = useNavigate();
-
   const onSubmit = (e) => {
     e.preventDefault();
     createProfile(formData, navigate, profile ? true : false);
@@ -55,10 +88,14 @@ const CreateProfile = ({ createProfile, profile }) => {
   return (
     <Fragment>
       <section className="container">
-        <h1 className="large text-primary">Create Your Profile</h1>
+        <h1 className="large text-primary">
+          {creatingProfile ? "Create Your Profile" : "Edit Your Profile"}
+        </h1>
         <p className="lead">
-          <i className="fas fa-user"></i> Let's get some information to make
-          your profile stand out
+          <i className="fas fa-user"></i>{" "}
+          {creatingProfile
+            ? `Let's get some information to make your`
+            : `Add some changes to your profile`}
         </p>
         <small>* = required field</small>
         <form className="form" onSubmit={(e) => onSubmit(e)}>
@@ -222,7 +259,7 @@ const CreateProfile = ({ createProfile, profile }) => {
           )}
 
           <input type="submit" className="btn btn-primary my-1" />
-          <Link className="btn btn-light my-1" to='/dashboard'>
+          <Link className="btn btn-light my-1" to="/dashboard">
             Go Back
           </Link>
         </form>
@@ -231,8 +268,14 @@ const CreateProfile = ({ createProfile, profile }) => {
   );
 };
 
-CreateProfile.propTypes = {
+ProfileForm.propTypes = {
   createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
-export default connect(null, { createProfile })(CreateProfile);
+const mapStateToProps = (state) => ({
+  profile: state.profile,
+});
+
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(ProfileForm);
