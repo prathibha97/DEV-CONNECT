@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import ProfileForm from "./components/profile-form/ProfileForm";
 import AddExperience from "./components/profile-form/AddExperience";
 import AddEducation from "./components/profile-form/AddEducation";
+import Profiles from "./components/profiles/Profiles";
 
 function App() {
   useEffect(() => {
@@ -37,6 +38,8 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="profiles" element={<Profiles />} />
+
           <Route
             path="dashboard"
             element={<PrivateRoute component={Dashboard} />}
