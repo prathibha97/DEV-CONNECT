@@ -20,6 +20,7 @@ import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 import { useEffect } from "react";
 import Posts from "./components/posts/Posts";
+import Post from "./components/post/Post";
 
 
 function App() {
@@ -67,6 +68,10 @@ function App() {
           <Route
             path="posts"
             element={<PrivateRoute component={Posts} />}
+          />
+          <Route
+            path="posts/:id"
+            element={<PrivateRoute component={Post} />}
           />
         </Routes>
       </Router>

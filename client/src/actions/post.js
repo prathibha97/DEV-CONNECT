@@ -6,6 +6,7 @@ import {
   UPDATE_LIKES,
   DELETE_POSTS,
   ADD_POST,
+  GET_POST,
 } from "./types";
 
 // Get posts
@@ -82,6 +83,22 @@ export const addPost = (formData) => async (dispatch) => {
       payload: response.data,
     });
     dispatch(setAlert("Post Created", "success"));
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get post
+export const getPost = (id) => async (dispatch) => {
+  try {
+    const response = await api.get(`/posts/${id}`);
+    dispatch({
+      type: GET_POST,
+      payload: response.data,
+    });
   } catch (err) {
     dispatch({
       type: POST_ERROR,
