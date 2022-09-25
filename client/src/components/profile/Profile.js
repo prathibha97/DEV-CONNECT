@@ -8,6 +8,7 @@ import ProfileExperience from "./ProfileExperience";
 import { getProfileById } from "../../actions/profile";
 import { Link, useParams } from "react-router-dom";
 import ProfileEducation from "./ProfileEducation";
+import ProfileGithub from "./ProfileGithub";
 
 const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
   const { id } = useParams();
@@ -66,6 +67,7 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth }) => {
                 )}
               </div>
             </div>
+            {profile.githubusername && (<ProfileGithub username={profile.githubusername}/>)}
           </div>
         </Fragment>
       )}
