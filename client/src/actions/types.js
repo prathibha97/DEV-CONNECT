@@ -21,6 +21,7 @@ export const UPDATE_PROFILE = "UPDATE_PROFILE";
 export const DELETE_ACCOUNT = "DELETE_ACCOUNT";
 
 export const GET_POSTS = "GET_POSTS";
+export const ADD_POST = "ADD_POST";
 export const POST_ERROR = "POST_ERROR";
 export const DELETE_POSTS = "DELETE_POSTS";
 

@@ -1,6 +1,12 @@
 import api from "../utils/api";
 import { setAlert } from "./alert";
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POSTS } from "./types";
+import {
+  GET_POSTS,
+  POST_ERROR,
+  UPDATE_LIKES,
+  DELETE_POSTS,
+  ADD_POST,
+} from "./types";
 
 // Get posts
 export const getPosts = () => async (dispatch) => {
@@ -58,7 +64,24 @@ export const deletePost = (id) => async (dispatch) => {
       type: DELETE_POSTS,
       payload: { id },
     });
-    dispatch(setAlert("Post removed", "success"));
+    dispatch(setAlert("Post Removed", "success"));
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Add posts
+export const addPost = (formData) => async (dispatch) => {
+  try {
+    const response = await api.post("/posts", formData);
+    dispatch({
+      type: ADD_POST,
+      payload: response.data,
+    });
+    dispatch(setAlert("Post Created", "success"));
   } catch (err) {
     dispatch({
       type: POST_ERROR,
