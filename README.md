@@ -11,11 +11,11 @@
 ## Running the Project
 
 1. In the terminal, run: `npm run deploy`
-2. Browse to the Devconnect frontend at [localhost:8000](http://localhost:8000) connect with other developers!
+2. Browse to the Devconnect frontend at [localhost:5000](http://localhost:5000) connect with other developers!
 
 ## Docker
 
 1. Ensure you have the latest version of Docker installed
 2. Run `docker build -t devconnect .`
-3. Run `docker run -it -p 8000:8000 devconnect`
+3. Run `docker run -it -p 5000:5000 devconnect`
 
